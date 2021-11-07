@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_card_game/components/game_board.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class GameScreen extends StatelessWidget {
               ))
         ],
       ),
+      body: const GameBoard(),
     );
   }
 }
