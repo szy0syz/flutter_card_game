@@ -3,7 +3,7 @@ import 'package:flutter_card_game/models/card_model.dart';
 
 class DrawModel {
   final int remaining;
-  final List<Card> cards;
+  final List<CardModel> cards;
 
   DrawModel({required this.remaining, this.cards = const []});
 

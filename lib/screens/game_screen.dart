@@ -21,8 +21,12 @@ class _GameScreenState extends State<GameScreen> {
     final service = DeckService();
 
     final deck = await service.newDeck();
-
-    print(deck);
+    print(deck.remaining);    // --> 52
+    print("------------");
+    final draw = await service.drawCards(deck, count: 7);
+    print(draw.cards.length); // --> 7
+    print("============");
+    print(draw.remaining);    // --> 45
   }
 
   @override
