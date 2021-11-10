@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_card_game/components/card_back.dart';
 import 'package:flutter_card_game/constants.dart';
 import 'package:flutter_card_game/models/card_model.dart';
 
@@ -23,10 +24,11 @@ class PlayingCard extends StatelessWidget {
               width: CARD_WIDTH * size,
               height: CARD_HEIGHT * size,
             )
-          : Container(),
+          : CardBack(size: size,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
       ),
+      clipBehavior: Clip.antiAlias,
     );
   }
 }
