@@ -10,7 +10,7 @@ enum Suit {
 
 class CardModel {
   final String image;
-  final String suit;
+  final Suit suit;
   final String value;
 
   CardModel({required this.image, required this.suit, required this.value});
