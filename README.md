@@ -2,15 +2,113 @@
 
 > 从来没想过写个项目能那么 “自由” !
 
-## Getting Started
+## Notes
 
-This project is a starting point for a Flutter application.
+- `card_model.dart`
 
-A few resources to get you started if this is your first Flutter project:
+```dart
+enum Suit {
+  Hearts,
+  Clubs,
+  Diamonds,
+  Spades,
+  Other,
+}
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+class CardModel {
+  final String image;
+  final Suit suit;
+  final String value;
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  CardModel({
+    required this.image,
+    required this.suit,
+    required this.value,
+  });
+
+  factory CardModel.fromJson(Map<String, dynamic> json) {
+    return CardModel(
+      image: json['image'],
+      suit: stringToSuit(json['suit']),
+      value: json['value'],
+    );
+  }
+
+  static Suit stringToSuit(String suit) {
+    switch (suit.toUpperCase().trim()) {
+      case "HEARTS":
+        return Suit.Hearts;
+      case "CLUBS":
+        return Suit.Clubs;
+      case "DIAMONDS":
+        return Suit.Diamonds;
+      case "SPADES":
+        return Suit.Spades;
+      default:
+        return Suit.Other;
+    }
+  }
+
+  static String suitToString(Suit suit) {
+    switch (suit) {
+      case Suit.Hearts:
+        return "Hearts";
+      case Suit.Clubs:
+        return "Clubs";
+      case Suit.Diamonds:
+        return "Diamonds";
+      case Suit.Spades:
+        return "Spades";
+      case Suit.Other:
+        return "Other";
+    }
+  }
+
+  static String suitToUnicode(Suit suit) {
+    switch (suit) {
+      case Suit.Hearts:
+        return "\u2665";
+      case Suit.Clubs:
+        return "\u2663";
+      case Suit.Diamonds:
+        return "\u2666";
+      case Suit.Spades:
+        return "\u2660";
+      case Suit.Other:
+        return "Other";
+    }
+  }
+
+  static Color suitToColor(Suit suit) {
+    switch (suit) {
+      case Suit.Hearts:
+      case Suit.Diamonds:
+        return Colors.red;
+      default:
+        return Colors.black;
+    }
+  }
+}
+```
+
+- `draw_model.dart`
+
+```dart
+class DrawModel {
+  final int remaining;
+  final List<Card> cards;
+
+  DrawModel({required this.remaining, this.cards = const []});
+
+  factory DrawModel.fromJson(Map<String, dynamic> json) {
+    final cards =
+        json["cards"].map<CardModel>((card) => CardModel.fromJson(card)).toList();
+
+    return DrawModel(remaining: json['remaining'], cards: cards);
+  }
+}
+```
+
+> **以上两段代码真的十分“面向对象”，也是一种面向对象的思想。**
+>
+> 写太多了前端，还是很缺这样的思想的。

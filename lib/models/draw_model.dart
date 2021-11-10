@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_card_game/models/card_model.dart';
 
 class DrawModel {
   final int remaining;
@@ -7,6 +8,9 @@ class DrawModel {
   DrawModel({required this.remaining, this.cards = const []});
 
   factory DrawModel.fromJson(Map<String, dynamic> json) {
-    return DrawModel(remaining: json['remaining'], cards: []);
+    final cards =
+        json["cards"].map<CardModel>((card) => CardModel.fromJson(card)).toList();
+
+    return DrawModel(remaining: json['remaining'], cards: cards);
   }
 }
