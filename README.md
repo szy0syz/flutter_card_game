@@ -1,6 +1,6 @@
 # flutter_card_game
 
-A new Flutter project.
+> 从来没想过写个项目能那么 “自由” !
 
 ## Getting Started
 
