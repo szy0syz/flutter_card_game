@@ -13,5 +13,25 @@ class CardModel {
   final String suit;
   final String value;
 
-  CardModel(this.image, this.suit, this.value);
+  CardModel({required this.image, required this.suit, required this.value});
+
+  factory CardModel.formJson(Map<String, dynamic> json) {
+    return CardModel(
+        image: json['image'], suit: json['suit'], value: json['value']);
+  }
+
+  static Suit stringToSuit(String suit) {
+    switch (suit.toUpperCase().trim()) {
+      case "HEARTS":
+        return Suit.Hearts;
+      case "DIAMONDS":
+        return Suit.Diamonds;
+      case "CLUBS":
+        return Suit.Clubs;
+      case "SPADES":
+        return Suit.Spades;
+      default:
+        return Suit.Other;
+    }
+  }
 }

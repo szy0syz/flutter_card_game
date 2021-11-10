@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
-class DarwModel {
+class DrawModel {
   final int remaining;
   final List<Card> cards;
 
-  DarwModel({required this.remaining, this.cards = const []});
+  DrawModel({required this.remaining, this.cards = const []});
+
+  factory DrawModel.fromJson(Map<String, dynamic> json) {
+    return DrawModel(remaining: json['remaining'], cards: []);
+  }
 }

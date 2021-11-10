@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_game/components/game_board.dart';
+import 'package:flutter_card_game/services/deck_service.dart';
 
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
+
+  @override
+  _GameScreenState createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    tempFunc();
+  }
+
+  void tempFunc() async {
+    final service = DeckService();
+
+    final deck = await service.newDeck();
+
+    print(deck);
+  }
 
   @override
   Widget build(BuildContext context) {
