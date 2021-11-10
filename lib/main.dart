@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_card_game/providers/game_provider.dart';
 import 'package:flutter_card_game/screens/game_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => GameProvider())],
+    child: const MyApp(),
+  );
+
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
