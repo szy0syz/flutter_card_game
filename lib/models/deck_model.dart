@@ -3,7 +3,7 @@
 class DeckModel {
   final String deck_id;
   final bool shuffled;
-  final int remaining;
+  int remaining;
 
   DeckModel(
       {required this.deck_id, required this.shuffled, required this.remaining});

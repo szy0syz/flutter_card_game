@@ -43,7 +43,6 @@ class _GameScreenState extends State<GameScreen> {
                   PlayerModel(name: "Jerry", isHuman: true),
                   PlayerModel(name: "Bot", isHuman: false),
                 ];
-                print('~~new game~~');
                 await _gameProvider.newGame(players);
               },
               child: const Text(

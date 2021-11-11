@@ -1,13 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_card_game/components/playing_card.dart';
-import 'package:flutter_card_game/models/card_model.dart';
+import 'package:flutter_card_game/components/deck_pile.dart';
+import 'package:flutter_card_game/models/player_model.dart';
+import 'package:flutter_card_game/providers/game_provider.dart';
+import 'package:provider/provider.dart';
 
 class GameBoard extends StatelessWidget {
   const GameBoard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Consumer<GameProvider>(builder: (context, model, child) {
+      return model.currentDeck != null
+          ? Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: GestureDetector(
+                      onTap: () async {
+                        await model.drawCards(model.players.first);
+                      },
+                      child: DeckPile(
+                        remaining: model.currentDeck!.remaining,
+                      )),
+                )
+              ],
+            )
+          : Center(
+              child: TextButton(
+                child: const Text("New Game?"),
+                onPressed: () {
+                  final players = [
+                    PlayerModel(name: "Jerry", isHuman: true),
+                    PlayerModel(name: "Bot", isHuman: false),
+                  ];
+                  model.newGame(players);
+                },
+              ),
+            );
+    });
   }
 
   // @override

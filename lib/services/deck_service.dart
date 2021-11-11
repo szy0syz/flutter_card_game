@@ -8,7 +8,7 @@ class DeckService extends ApiService {
       '/deck/new/shuffle',
       params: {'deck_count': deckCount},
     );
-    print(data);
+    print("[newDeck] >> ${data}");
     return DeckModel.fromJson(data);
   }
 
