@@ -4,10 +4,10 @@ import 'package:flutter_card_game/screens/game_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  MultiProvider(
+  runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => GameProvider())],
     child: const MyApp(),
-  );
+  ));
 
   // runApp(const MyApp());
 }

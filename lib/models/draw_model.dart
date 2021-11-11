@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_card_game/models/card_model.dart';
 
 class DrawModel {
