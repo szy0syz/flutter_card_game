@@ -24,7 +24,9 @@ class PlayingCard extends StatelessWidget {
               width: CARD_WIDTH * size,
               height: CARD_HEIGHT * size,
             )
-          : CardBack(size: size,),
+          : CardBack(
+              size: size,
+            ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4.0),
       ),

@@ -135,3 +135,12 @@ class _GameScreenState extends State<GameScreen> {
   }
 }
 ```
+
+关于Flutter中的状态管理
+
+- 首页是定义 `provider` 的逻辑，这里可能还带有 `service` 的异步请求数据，还有整个当前领域的完整数据属性和转移这些状态的操作方法。但这里其实包含了传统意义上 “MVC” 层里的 `Controller` 那一层。
+- 那又怎么写好这个 `mvc` 层里的 `provider` 呢？
+- `provider` 应遵守管理的状态全部是 “领域数据”
+- `provider` 里的数据属性应该是收敛且内聚的，不能有掺杂
+- `provider` 所有会改变内部数据变化的方法全部定义在这个 `provider` 内，不允许出现外部 `外面` 改变 `里面` 的情况出现。有点废话了，`notifyListeners()` 方法又不可能随便调
+- `provider` 这个类的属性，那些会变的数据，只能 `get` ，不能随意 `set`

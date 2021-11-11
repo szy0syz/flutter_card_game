@@ -42,15 +42,15 @@ class GameProvider with ChangeNotifier {
 
   Future<void> setupBoard() async {}
 
-   Future<void> drawCards(PlayerModel player, { int count = 1 }) async {
-     if (currentDeck == null) return;
+  Future<void> drawCards(PlayerModel player, {int count = 1}) async {
+    if (currentDeck == null) return;
 
-     final draw = await _service.drawCards(_currentDeck!, count: count);
-     
-     _turn.drawCount += count;
+    final draw = await _service.drawCards(_currentDeck!, count: count);
 
-     _currentDeck!.remaining = draw.remaining;
+    _turn.drawCount += count;
 
-     notifyListeners();
-   }
+    _currentDeck!.remaining = draw.remaining;
+
+    notifyListeners();
+  }
 }
