@@ -112,3 +112,26 @@ class DrawModel {
 > **以上两段代码真的十分“面向对象”，也是一种面向对象的思想。**
 >
 > 写太多了前端，还是很缺这样的思想的。
+
+### use my “Provider”
+
+```dart
+void main() {
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => GameProvider())],
+    child: const MyApp(),
+  ));
+}
+```
+
+```dart
+class _GameScreenState extends State<GameScreen> {
+  late final GameProvider _gameProvider;
+
+  @override
+  void initState() {
+    _gameProvider = Provider.of<GameProvider>(context, listen: false);
+    super.initState();
+  }
+}
+```

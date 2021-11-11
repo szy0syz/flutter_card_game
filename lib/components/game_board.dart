@@ -7,13 +7,20 @@ class GameBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final card = CardModel(
-        image: "https://deckofcardsapi.com/static/img/KH.png",
-        suit: Suit.Hearts,
-        value: "KING");
-
-    return Center(
-      child: PlayingCard(card: card, visible: true,),
-    );
+    return Container();
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   final card = CardModel(
+  //       image: "https://deckofcardsapi.com/static/img/KH.png",
+  //       suit: Suit.Hearts,
+  //       value: "KING");
+  //   return Center(
+  //     child: PlayingCard(
+  //       card: card,
+  //       visible: true,
+  //     ),
+  //   );
+  // }
 }
