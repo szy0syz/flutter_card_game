@@ -144,3 +144,5 @@ class _GameScreenState extends State<GameScreen> {
 - `provider` 里的数据属性应该是收敛且内聚的，不能有掺杂
 - `provider` 所有会改变内部数据变化的方法全部定义在这个 `provider` 内，不允许出现外部 `外面` 改变 `里面` 的情况出现。有点废话了，`notifyListeners()` 方法又不可能随便调
 - `provider` 这个类的属性，那些会变的数据，只能 `get` ，不能随意 `set`
+
+![g1](assets/deck1.gif)

@@ -47,6 +47,7 @@ class GameProvider with ChangeNotifier {
 
     final draw = await _service.drawCards(_currentDeck!, count: count);
 
+    player.addCards(draw.cards);
     _turn.drawCount += count;
 
     _currentDeck!.remaining = draw.remaining;

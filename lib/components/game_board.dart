@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_card_game/components/card_list.dart';
 import 'package:flutter_card_game/components/deck_pile.dart';
 import 'package:flutter_card_game/models/player_model.dart';
 import 'package:flutter_card_game/providers/game_provider.dart';
@@ -22,6 +23,10 @@ class GameBoard extends StatelessWidget {
                       child: DeckPile(
                         remaining: model.currentDeck!.remaining,
                       )),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: CardList(player: model.players[0]),
                 )
               ],
             )
