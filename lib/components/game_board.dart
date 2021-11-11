@@ -25,6 +25,12 @@ class GameBoard extends StatelessWidget {
                       )),
                 ),
                 Align(
+                  alignment: Alignment.topCenter,
+                  child: CardList(
+                    player: model.players[1],
+                  ),
+                ),
+                Align(
                   alignment: Alignment.bottomCenter,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -35,11 +41,13 @@ class GameBoard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             if (model.turn.currentPlayer == model.players[0])
-                            ElevatedButton(
-                                onPressed: model.canEndTurn ? () {
-                                  model.endTurn();
-                                } : null,
-                                child: const Text("End Turn"))
+                              ElevatedButton(
+                                  onPressed: model.canEndTurn
+                                      ? () {
+                                          model.endTurn();
+                                        }
+                                      : null,
+                                  child: const Text("End Turn"))
                           ],
                         ),
                       ),
