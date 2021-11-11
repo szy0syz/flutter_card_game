@@ -54,4 +54,20 @@ class GameProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  bool get canEndTurn {
+    return true;
+  }
+
+  void endTurn() {
+    _turn.nextTurn();
+
+    if (_turn.currentPlayer.isBot) {
+      botTurn();
+    }
+
+     notifyListeners();
+  }
+
+  void botTurn() {}
 }
