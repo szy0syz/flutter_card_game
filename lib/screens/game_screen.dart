@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_game/components/game_board.dart';
 import 'package:flutter_card_game/models/player_model.dart';
-import 'package:flutter_card_game/providers/game_provider.dart';
+import 'package:flutter_card_game/providers/crazy_eights_game_provider.dart';
 import 'package:provider/provider.dart';
 
 class GameScreen extends StatefulWidget {
@@ -12,11 +12,11 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  late final GameProvider _gameProvider;
+  late final CrazyEightGameProvider _gameProvider;
 
   @override
   void initState() {
-    _gameProvider = Provider.of<GameProvider>(context, listen: false);
+    _gameProvider = Provider.of<CrazyEightGameProvider>(context, listen: false);
     super.initState();
   }
 

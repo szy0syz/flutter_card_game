@@ -42,13 +42,24 @@ abstract class GameProvider with ChangeNotifier {
 
   Future<void> setupBoard() async {}
 
+  Future<void> drawCardToDiscardPile({int count = 1}) async {
+    final draw = await _service.drawCards(_currentDeck!, count:  count);
+
+    // 再次更新下剩余牌数量
+    _currentDeck!.remaining = draw.remaining;
+    _discards.addAll(draw.cards);
+
+    notifyListeners();
+  }
+
   bool get canDrawCard {
     return turn.drawCount < 1;
   }
 
-  Future<void> drawCards(PlayerModel player, {int count = 1}) async {
+  Future<void> drawCards(PlayerModel player,
+      {int count = 1, bool allowanytime = false}) async {
     if (currentDeck == null) return;
-    if (!canDrawCard) return;
+    if (!allowanytime && !canDrawCard) return;
 
     final draw = await _service.drawCards(_currentDeck!, count: count);
 
@@ -104,7 +115,7 @@ abstract class GameProvider with ChangeNotifier {
 
     if (_turn.currentPlayer.cards.isNotEmpty) {
       await Future.delayed(const Duration(milliseconds: 1000));
-      
+
       playCard(
           player: _turn.currentPlayer, card: _turn.currentPlayer.cards.first);
     }
