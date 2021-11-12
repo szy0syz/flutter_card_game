@@ -148,3 +148,5 @@ class _GameScreenState extends State<GameScreen> {
 ![g1](assets/deck1.gif)
 
 ![g2](assets/deck2.gif)
+
+![g3](assets/deck3.gif)
