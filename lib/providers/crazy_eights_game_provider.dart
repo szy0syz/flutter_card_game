@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_card_game/constants.dart';
+import 'package:flutter_card_game/main.dart';
 import 'package:flutter_card_game/models/card_model.dart';
 
 import 'game_provider.dart';
@@ -70,5 +72,31 @@ class CrazyEightGameProvider extends GameProvider {
     }
 
     endTurn();
+  }
+
+  @override
+  Future<void> applyCardSideEffect(CardModel card) async {
+    // 8
+    if (card.value == "8") {
+      Suit? suit;
+
+      if (turn.currentPlayer.isHuman) {
+        // show picker
+        suit = await showDialog(
+            context: navigatorKey.currentContext!,
+            builder: (_) => Container(),
+            barrierDismissible: false);
+      } else {
+        suit = Suit.Spades;
+      }
+
+      gameState[GS_LAST_SUIT] = suit;
+    }
+
+    // 2
+
+    // J
+
+    // QS
   }
 }
