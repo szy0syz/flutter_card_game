@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_card_game/components/suit_chooser_modal.dart';
 import 'package:flutter_card_game/constants.dart';
 import 'package:flutter_card_game/main.dart';
 import 'package:flutter_card_game/models/card_model.dart';
@@ -77,14 +78,17 @@ class CrazyEightGameProvider extends GameProvider {
   @override
   Future<void> applyCardSideEffect(CardModel card) async {
     // 8
-    if (card.value == "8") {
+    if (card.value == "8" ||
+        card.value == "7" ||
+        card.value == "6" ||
+        card.value == "5") {
       Suit? suit;
 
       if (turn.currentPlayer.isHuman) {
         // show picker
         suit = await showDialog(
             context: navigatorKey.currentContext!,
-            builder: (_) => Container(),
+            builder: (_) => const SuitChooserModal(),
             barrierDismissible: false);
       } else {
         suit = Suit.Spades;
