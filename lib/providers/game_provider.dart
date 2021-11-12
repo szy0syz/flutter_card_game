@@ -42,8 +42,13 @@ class GameProvider with ChangeNotifier {
 
   Future<void> setupBoard() async {}
 
+  bool get canDrawCard {
+    return turn.drawCount < 1;
+  }
+
   Future<void> drawCards(PlayerModel player, {int count = 1}) async {
     if (currentDeck == null) return;
+    if (!canDrawCard) return;
 
     final draw = await _service.drawCards(_currentDeck!, count: count);
 
@@ -69,9 +74,9 @@ class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
-    bool canPlayCard(CardModel card) {
-      return true;
-    }
+  bool canPlayCard(CardModel card) {
+    return _turn.actionCount < 1;
+  }
 
   Future<void> playCard({
     required PlayerModel player,
@@ -87,17 +92,22 @@ class GameProvider with ChangeNotifier {
 
     _turn.actionCount += 1;
 
-     notifyListeners();
+    notifyListeners();
   }
 
-  Future<void> applyCardSideEffect(CardModel card) async {
-
-  }
+  Future<void> applyCardSideEffect(CardModel card) async {}
 
   Future<void> botTurn() async {
     await Future.delayed(const Duration(milliseconds: 500));
     await drawCards(_turn.currentPlayer);
     await Future.delayed(const Duration(milliseconds: 500));
+
+    if (_turn.currentPlayer.cards.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 1000));
+      
+      playCard(
+          player: _turn.currentPlayer, card: _turn.currentPlayer.cards.first);
+    }
 
     if (canEndTurn) {
       endTurn();
