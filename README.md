@@ -136,7 +136,7 @@ class _GameScreenState extends State<GameScreen> {
 }
 ```
 
-关于Flutter中的状态管理
+关于 Flutter 中的状态管理
 
 - 首页是定义 `provider` 的逻辑，这里可能还带有 `service` 的异步请求数据，还有整个当前领域的完整数据属性和转移这些状态的操作方法。但这里其实包含了传统意义上 “MVC” 层里的 `Controller` 那一层。
 - 那又怎么写好这个 `mvc` 层里的 `provider` 呢？
@@ -150,3 +150,30 @@ class _GameScreenState extends State<GameScreen> {
 ![g2](assets/deck2.gif)
 
 ![g3](assets/deck3.gif)
+
+> 越来越有点意思了。
+
+### NavigatorKey
+
+```dart
+final navigatorKey = GlobalKey<NavigatorState>();
+final rootScaffoldMessemgerKey = GlobalKey<ScaffoldMessengerState>();
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Card Game',
+      navigatorKey: navigatorKey,
+      scaffoldMessengerKey: rootScaffoldMessemgerKey,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const GameScreen(),
+    );
+  }
+}
+```
