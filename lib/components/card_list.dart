@@ -26,6 +26,7 @@ class CardList extends StatelessWidget {
           return PlayingCard(
             card: card,
             size: size,
+            // visible: player.isHuman,
             visible: true,
             onPlayCard: onPlayCard
             
