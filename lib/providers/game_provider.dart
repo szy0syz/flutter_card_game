@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_card_game/constants.dart';
 import 'package:flutter_card_game/models/card_model.dart';
 import 'package:flutter_card_game/models/deck_model.dart';
 import 'package:flutter_card_game/models/player_model.dart';
@@ -43,13 +44,20 @@ abstract class GameProvider with ChangeNotifier {
   Future<void> setupBoard() async {}
 
   Future<void> drawCardToDiscardPile({int count = 1}) async {
-    final draw = await _service.drawCards(_currentDeck!, count:  count);
+    final draw = await _service.drawCards(_currentDeck!, count: count);
 
     // 再次更新下剩余牌数量
     _currentDeck!.remaining = draw.remaining;
     _discards.addAll(draw.cards);
 
     notifyListeners();
+  }
+
+  void setLastPlayed(CardModel card) {
+    gameState[GS_LAST_SUIT] = card.suit;
+    gameState[GS_LAST_VALUE] = card.value;
+
+    notifyListeners();  
   }
 
   bool get canDrawCard {
@@ -102,6 +110,8 @@ abstract class GameProvider with ChangeNotifier {
     await applyCardSideEffect(card);
 
     _turn.actionCount += 1;
+
+    setLastPlayed(card);
 
     notifyListeners();
   }
