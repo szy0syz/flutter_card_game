@@ -5,7 +5,7 @@ import 'package:flutter_card_game/models/player_model.dart';
 import 'package:flutter_card_game/models/turn_model.dart';
 import 'package:flutter_card_game/services/deck_service.dart';
 
-class GameProvider with ChangeNotifier {
+abstract class GameProvider with ChangeNotifier {
   GameProvider() {
     _service = DeckService();
   }
