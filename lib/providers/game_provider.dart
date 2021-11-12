@@ -69,6 +69,31 @@ class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
+    bool canPlayCard(CardModel card) {
+      return true;
+    }
+
+  Future<void> playCard({
+    required PlayerModel player,
+    required CardModel card,
+  }) async {
+    if (!canPlayCard(card)) return;
+
+    player.removeCard(card);
+
+    _discards.add(card);
+
+    await applyCardSideEffect(card);
+
+    _turn.actionCount += 1;
+
+     notifyListeners();
+  }
+
+  Future<void> applyCardSideEffect(CardModel card) async {
+
+  }
+
   Future<void> botTurn() async {
     await Future.delayed(const Duration(milliseconds: 500));
     await drawCards(_turn.currentPlayer);

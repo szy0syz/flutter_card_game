@@ -27,6 +27,8 @@ class CardList extends StatelessWidget {
             card: card,
             size: size,
             visible: true,
+            onPlayCard: onPlayCard
+            
           );
         }
         ),

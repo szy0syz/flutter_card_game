@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_game/components/card_list.dart';
 import 'package:flutter_card_game/components/deck_pile.dart';
+import 'package:flutter_card_game/components/discard_pile.dart';
+import 'package:flutter_card_game/models/card_model.dart';
 import 'package:flutter_card_game/models/player_model.dart';
 import 'package:flutter_card_game/providers/game_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +18,22 @@ class GameBoard extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.center,
-                  child: GestureDetector(
-                      onTap: () async {
-                        await model.drawCards(model.turn.currentPlayer);
-                      },
-                      child: DeckPile(
-                        remaining: model.currentDeck!.remaining,
-                      )),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                          onTap: () async {
+                            await model.drawCards(model.turn.currentPlayer);
+                          },
+                          child: DeckPile(
+                            remaining: model.currentDeck!.remaining,
+                          )),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      DiscardPile(cards: model.discards)
+                    ],
+                  ),
                 ),
                 Align(
                   alignment: Alignment.topCenter,
@@ -51,7 +62,9 @@ class GameBoard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      CardList(player: model.players[0]),
+                      CardList(player: model.players[0], onPlayCard: (CardModel card) {
+                        model.playCard(player: model.players[0], card: card);
+                      },),
                     ],
                   ),
                 )
