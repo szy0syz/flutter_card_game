@@ -146,3 +146,5 @@ class _GameScreenState extends State<GameScreen> {
 - `provider` 这个类的属性，那些会变的数据，只能 `get` ，不能随意 `set`
 
 ![g1](assets/deck1.gif)
+
+![g2](assets/deck2.gif)
