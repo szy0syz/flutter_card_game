@@ -10,7 +10,7 @@ class CrazyEightGameProvider extends GameProvider {
   @override
   Future<void> setupBoard() async {
     for (var p in players) {
-      await drawCards(p, count: 3, allowanytime: true);
+      await drawCards(p, count: 8, allowAnyTime: true);
     }
 
     await drawCardToDiscardPile();
@@ -23,7 +23,7 @@ class CrazyEightGameProvider extends GameProvider {
 
   @override
   bool get canEndTurn {
-    if (turn.actionCount > 0 || turn.actionCount > 0) {
+    if (turn.drawCount > 0 || turn.actionCount > 0) {
       return true;
     }
 
@@ -54,18 +54,51 @@ class CrazyEightGameProvider extends GameProvider {
   }
 
   @override
-  void finishGame() {
-    showToast("Game over! ${turn.currentPlayer.name} WINS!");
+  Future<void> applyCardSideEffects(CardModel card) async {
+    if (card.value == "8") {
+      Suit suit;
+
+      if (turn.currentPlayer.isHuman) {
+        suit = await showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (_) => const SuitChooserModal(),
+          barrierDismissible: false,
+        );
+      } else {
+        suit = turn.currentPlayer.cards.first.suit;
+      }
+
+      gameState[GS_LAST_SUIT] = suit;
+      setTrump(suit);
+      showToast(
+          "${turn.currentPlayer.name} has changed it to ${CardModel.suitToString(suit)}");
+    } else if (card.value == "2") {
+      await drawCards(turn.otherPlayer, count: 2, allowAnyTime: true);
+      showToast("${turn.otherPlayer.name} has to draw 2 cards!");
+    } else if (card.value == "QUEEN" && card.suit == Suit.Spades) {
+      await drawCards(turn.otherPlayer, count: 5, allowAnyTime: true);
+      showToast("${turn.otherPlayer.name} has to draw 5 cards!");
+    } else if (card.value == "JACK") {
+      showToast("${turn.otherPlayer.name} misses a turn!");
+      skipTurn();
+    }
+
     notifyListeners();
   }
 
   @override
-   bool get gameIsOver {
-     if (turn.currentPlayer.cards.isEmpty) {
-       return true;
-     }
+  bool get gameIsOver {
+    if (turn.currentPlayer.cards.isEmpty) {
+      return true;
+    }
 
     return false;
+  }
+
+  @override
+  void finishGame() {
+    showToast("Game over! ${turn.currentPlayer.name} WINS!");
+    notifyListeners();
   }
 
   @override
@@ -74,7 +107,7 @@ class CrazyEightGameProvider extends GameProvider {
 
     await Future.delayed(const Duration(milliseconds: 500));
 
-    for (var c in p.cards) {
+    for (final c in p.cards) {
       if (canPlayCard(c)) {
         await playCard(player: p, card: c);
         endTurn();
@@ -91,39 +124,5 @@ class CrazyEightGameProvider extends GameProvider {
     }
 
     endTurn();
-  }
-
-  @override
-  Future<void> applyCardSideEffect(CardModel card) async {
-    // 8
-    if (card.value == "8") {
-      Suit suit;
-
-      if (turn.currentPlayer.isHuman) {
-        // show picker
-        suit = await showDialog(
-            context: navigatorKey.currentContext!,
-            builder: (_) => const SuitChooserModal(),
-            barrierDismissible: false);
-      } else {
-        suit = turn.currentPlayer.cards.first.suit;
-      }
-
-      gameState[GS_LAST_SUIT] = suit;
-      setTrump(suit);
-      showToast(
-          "${turn.currentPlayer.name} has changede it to ${CardModel.suitToString(suit)}");
-    } else if (card.value == "2") {
-      await drawCards(turn.otherPlayer, count: 2, allowanytime: true);
-      showToast("${turn.currentPlayer.name} has to draw 2 cards!");
-    } else if (card.value == "QUEEN" && card.suit == Suit.Spades) {
-      await drawCards(turn.otherPlayer, count: 5, allowanytime: true);
-      showToast("${turn.currentPlayer.name} has to draw 2 cards!");
-    } else if (card.value == "JACK") {
-      showToast("${turn.otherPlayer.name} misses a turn!");
-      skipTurn();
-    }
-
-    notifyListeners();
   }
 }

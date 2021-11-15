@@ -7,6 +7,18 @@ import 'package:flutter_card_game/models/player_model.dart';
 import 'package:flutter_card_game/models/turn_model.dart';
 import 'package:flutter_card_game/services/deck_service.dart';
 
+class ActionButton {
+  final String label;
+  final bool enabled;
+  final Function() onPressed;
+
+  ActionButton({
+    required this.label,
+    required this.onPressed,
+    this.enabled = true,
+  });
+}
+
 abstract class GameProvider with ChangeNotifier {
   GameProvider() {
     _service = DeckService();
@@ -17,7 +29,6 @@ abstract class GameProvider with ChangeNotifier {
   late Turn _turn;
   Turn get turn => _turn;
 
-  // 这样写只读属性
   DeckModel? _currentDeck;
   DeckModel? get currentDeck => _currentDeck;
 
@@ -26,11 +37,12 @@ abstract class GameProvider with ChangeNotifier {
 
   List<CardModel> _discards = [];
   List<CardModel> get discards => _discards;
-
   CardModel? get discardTop => _discards.isEmpty ? null : _discards.last;
 
   Map<String, dynamic> gameState = {};
   Widget? bottomWidget;
+
+  List<ActionButton> additionalButtons = [];
 
   Future<void> newGame(List<PlayerModel> players) async {
     final deck = await _service.newDeck();
@@ -45,9 +57,17 @@ abstract class GameProvider with ChangeNotifier {
 
   Future<void> setupBoard() async {}
 
+  Future<void> drawCardToDiscardPile({int count = 1}) async {
+    final draw = await _service.drawCards(_currentDeck!, count: count);
+
+    _currentDeck!.remaining = draw.remaining;
+    _discards.addAll(draw.cards);
+
+    notifyListeners();
+  }
+
   void setBottomWidget(Widget? widget) {
     bottomWidget = widget;
-
     notifyListeners();
   }
 
@@ -56,20 +76,17 @@ abstract class GameProvider with ChangeNotifier {
       Card(
         child: Text(
           CardModel.suitToUnicode(suit),
-          style: TextStyle(fontSize: 24, color: CardModel.suitToColor(suit)),
+          style: TextStyle(
+            fontSize: 24,
+            color: CardModel.suitToColor(suit),
+          ),
         ),
       ),
     );
   }
 
-  Future<void> drawCardToDiscardPile({int count = 1}) async {
-    final draw = await _service.drawCards(_currentDeck!, count: count);
-
-    // 再次更新下剩余牌数量
-    _currentDeck!.remaining = draw.remaining;
-    _discards.addAll(draw.cards);
-
-    notifyListeners();
+  bool get showBottomWidget {
+    return true;
   }
 
   void setLastPlayed(CardModel card) {
@@ -82,19 +99,21 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   bool get canDrawCard {
-    print('turn.drawCount ${turn.drawCount}');
     return turn.drawCount < 1;
   }
 
-  Future<void> drawCards(PlayerModel player,
-      {int count = 1, bool allowanytime = false}) async {
+  Future<void> drawCards(
+    PlayerModel player, {
+    int count = 1,
+    bool allowAnyTime = false,
+  }) async {
     if (currentDeck == null) return;
-    print('@');
-    if (!allowanytime && !canDrawCard) return;
+    if (!allowAnyTime && !canDrawCard) return;
 
     final draw = await _service.drawCards(_currentDeck!, count: count);
 
     player.addCards(draw.cards);
+
     _turn.drawCount += count;
 
     _currentDeck!.remaining = draw.remaining;
@@ -102,39 +121,9 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool get canEndTurn {
-    return turn.drawCount > 0;
-  }
-
-  void endTurn() async {
-    _turn.nextTurn();
-
-    if (_turn.currentPlayer.isBot) {
-      botTurn();
-    }
-
-    notifyListeners();
-  }
-
-  void skipTurn() async {
-    _turn.nextTurn();
-    _turn.nextTurn();
-
-    notifyListeners();
-  }
-
-  bool get gameIsOver {
-    return currentDeck!.remaining < 1;
-  }
-
-  void finishGame() {
-    showToast("Game over");
-    notifyListeners();
-  }
-
   bool canPlayCard(CardModel card) {
     if (gameIsOver) return false;
-    
+
     return _turn.actionCount < 1;
   }
 
@@ -152,7 +141,7 @@ abstract class GameProvider with ChangeNotifier {
 
     setLastPlayed(card);
 
-    await applyCardSideEffect(card);
+    await applyCardSideEffects(card);
 
     if (gameIsOver) {
       finishGame();
@@ -161,7 +150,64 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> applyCardSideEffect(CardModel card) async {}
+  bool canDrawCardsFromDiscardPile({int count = 1}) {
+    if (!canDrawCard) return false;
+
+    return discards.length >= count;
+  }
+
+  void drawCardsFromDiscard(PlayerModel player, {int count = 1}) {
+    if (!canDrawCardsFromDiscardPile(count: count)) {
+      return;
+    }
+
+    // get the first x cards
+    final start = discards.length - count;
+    final end = discards.length;
+    final cards = discards.getRange(start, end).toList();
+
+    discards.removeRange(start, end);
+
+    // give them to player
+    player.addCards(cards);
+
+    // incrment the draw count
+    turn.drawCount += count;
+
+    notifyListeners();
+  }
+
+  Future<void> applyCardSideEffects(CardModel card) async {}
+
+  bool get canEndTurn {
+    return turn.drawCount > 0;
+  }
+
+  void endTurn() {
+    _turn.nextTurn();
+
+    if (_turn.currentPlayer.isBot) {
+      botTurn();
+    }
+
+    notifyListeners();
+  }
+
+  void skipTurn() {
+    _turn.nextTurn();
+    _turn.nextTurn();
+
+    notifyListeners();
+  }
+
+  bool get gameIsOver {
+    return currentDeck!.remaining < 1;
+  }
+
+  void finishGame() {
+    showToast("Game over!");
+    notifyListeners();
+  }
 
   Future<void> botTurn() async {
     await Future.delayed(const Duration(milliseconds: 500));
@@ -172,7 +218,9 @@ abstract class GameProvider with ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 1000));
 
       playCard(
-          player: _turn.currentPlayer, card: _turn.currentPlayer.cards.first);
+        player: _turn.currentPlayer,
+        card: _turn.currentPlayer.cards.first,
+      );
     }
 
     if (canEndTurn) {
@@ -181,10 +229,12 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   void showToast(String message, {int seconds = 3, SnackBarAction? action}) {
-    rootScaffoldMessemgerKey.currentState!.showSnackBar(SnackBar(
-      duration: Duration(seconds: seconds),
-      content: Text(message),
-      action: action,
-    ));
+    rootScaffoldMessemgerKey.currentState!.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: seconds),
+        action: action,
+      ),
+    );
   }
 }
