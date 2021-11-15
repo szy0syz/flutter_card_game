@@ -178,6 +178,8 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+- `flutter build web --release --base-href '/flutter_card_game/'`
+
 > 面向对象竟然那么有意思！
 
 ## Deploy
