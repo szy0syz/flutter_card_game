@@ -178,4 +178,8 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-> 3 Implementing Game Logic Rules Continued -- 24:50
+## Deploy
+
+![flutter-web.jpg](assets/flutter-web.jpg)
+
+`flutter-web` 目前来看，还是不成气候的嘛。
