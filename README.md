@@ -182,6 +182,8 @@ class MyApp extends StatelessWidget {
 
 > 面向对象竟然那么有意思！
 
+![g4](assets/deck4.gif)
+
 ## Deploy
 
 ![flutter-web.jpg](assets/flutter-web.jpg)
