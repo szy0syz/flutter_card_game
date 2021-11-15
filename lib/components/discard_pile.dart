@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_card_game/components/playing_card.dart';
 import 'package:flutter_card_game/constants.dart';
 import 'package:flutter_card_game/models/card_model.dart';
-import 'package:flutter_card_game/models/player_model.dart';
 
 class DiscardPile extends StatelessWidget {
   final List<CardModel> cards;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_game/constants.dart';
+import 'package:flutter_card_game/main.dart';
 import 'package:flutter_card_game/models/card_model.dart';
 import 'package:flutter_card_game/models/deck_model.dart';
 import 'package:flutter_card_game/models/player_model.dart';
@@ -35,8 +36,8 @@ abstract class GameProvider with ChangeNotifier {
     _currentDeck = deck;
     _players = players;
     _discards = [];
-    _turn = Turn(players: players, currentPlayer: players.first);
     setupBoard();
+    _turn = Turn(players: players, currentPlayer: players.first);
 
     notifyListeners();
   }
@@ -57,7 +58,7 @@ abstract class GameProvider with ChangeNotifier {
     gameState[GS_LAST_SUIT] = card.suit;
     gameState[GS_LAST_VALUE] = card.value;
 
-    notifyListeners();  
+    notifyListeners();
   }
 
   bool get canDrawCard {
@@ -93,6 +94,13 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void skipTurn() async {
+    _turn.nextTurn();
+    _turn.nextTurn();
+
+    notifyListeners();
+  }
+
   bool canPlayCard(CardModel card) {
     return _turn.actionCount < 1;
   }
@@ -107,11 +115,11 @@ abstract class GameProvider with ChangeNotifier {
 
     _discards.add(card);
 
-    await applyCardSideEffect(card);
-
     _turn.actionCount += 1;
 
     setLastPlayed(card);
+
+    await applyCardSideEffect(card);
 
     notifyListeners();
   }
@@ -133,5 +141,13 @@ abstract class GameProvider with ChangeNotifier {
     if (canEndTurn) {
       endTurn();
     }
+  }
+
+  void showToast(String message, {int seconds = 3, SnackBarAction? action}) {
+    rootScaffoldMessemgerKey.currentState!.showSnackBar(SnackBar(
+      duration: Duration(seconds: seconds),
+      content: Text(message),
+      action: action,
+    ));
   }
 }

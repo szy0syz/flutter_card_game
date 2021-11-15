@@ -16,6 +16,9 @@ class CrazyEightGameProvider extends GameProvider {
     await drawCardToDiscardPile();
 
     setLastPlayed(discardTop!);
+
+    turn.drawCount = 0;
+    turn.actionCount = 0;
   }
 
   @override
@@ -78,10 +81,7 @@ class CrazyEightGameProvider extends GameProvider {
   @override
   Future<void> applyCardSideEffect(CardModel card) async {
     // 8
-    if (card.value == "8" ||
-        card.value == "7" ||
-        card.value == "6" ||
-        card.value == "5") {
+    if (card.value == "8") {
       Suit? suit;
 
       if (turn.currentPlayer.isHuman) {
@@ -91,16 +91,21 @@ class CrazyEightGameProvider extends GameProvider {
             builder: (_) => const SuitChooserModal(),
             barrierDismissible: false);
       } else {
-        suit = Suit.Spades;
+        suit = turn.currentPlayer.cards.first.suit;
       }
 
       gameState[GS_LAST_SUIT] = suit;
+    } else if (card.value == "2") {
+      await drawCards(turn.otherPlayer, count: 2, allowanytime: true);
+      showToast("${turn.currentPlayer.name} has to draw 2 cards!");
+    } else if (card.value == "QUEEN" && card.suit == Suit.Spades) {
+      await drawCards(turn.otherPlayer, count: 5, allowanytime: true);
+      showToast("${turn.currentPlayer.name} has to draw 2 cards!");
+    } else if (card.value == "JACK") {
+      showToast("${turn.otherPlayer.name} misses a turn!");
+      skipTurn();
     }
 
-    // 2
-
-    // J
-
-    // QS
+    notifyListeners();
   }
 }

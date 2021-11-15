@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_card_game/models/deck_model.dart';
 import 'package:flutter_card_game/models/draw_model.dart';
 import 'package:flutter_card_game/services/api_service.dart';
@@ -8,7 +10,7 @@ class DeckService extends ApiService {
       '/deck/new/shuffle',
       params: {'deck_count': deckCount},
     );
-    print("[newDeck] >> ${data}");
+    print("[newDeck] >> ${data.toString()}");
     return DeckModel.fromJson(data);
   }
 
