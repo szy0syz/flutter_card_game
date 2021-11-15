@@ -30,6 +30,7 @@ abstract class GameProvider with ChangeNotifier {
   CardModel? get discardTop => _discards.isEmpty ? null : _discards.last;
 
   Map<String, dynamic> gameState = {};
+  Widget? bottomWidget;
 
   Future<void> newGame(List<PlayerModel> players) async {
     final deck = await _service.newDeck();
@@ -44,6 +45,23 @@ abstract class GameProvider with ChangeNotifier {
 
   Future<void> setupBoard() async {}
 
+  void setBottomWidget(Widget? widget) {
+    bottomWidget = widget;
+
+    notifyListeners();
+  }
+
+  void setTrump(Suit suit) {
+    setBottomWidget(
+      Card(
+        child: Text(
+          CardModel.suitToUnicode(suit),
+          style: TextStyle(fontSize: 24, color: CardModel.suitToColor(suit)),
+        ),
+      ),
+    );
+  }
+
   Future<void> drawCardToDiscardPile({int count = 1}) async {
     final draw = await _service.drawCards(_currentDeck!, count: count);
 
@@ -57,6 +75,8 @@ abstract class GameProvider with ChangeNotifier {
   void setLastPlayed(CardModel card) {
     gameState[GS_LAST_SUIT] = card.suit;
     gameState[GS_LAST_VALUE] = card.value;
+
+    setTrump(card.suit);
 
     notifyListeners();
   }

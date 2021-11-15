@@ -178,4 +178,4 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-> 3 Implementing Game Logic  Rules Continued -- 24:50
+> 3 Implementing Game Logic Rules Continued -- 24:50

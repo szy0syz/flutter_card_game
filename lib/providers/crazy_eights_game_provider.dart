@@ -82,7 +82,7 @@ class CrazyEightGameProvider extends GameProvider {
   Future<void> applyCardSideEffect(CardModel card) async {
     // 8
     if (card.value == "8") {
-      Suit? suit;
+      Suit suit;
 
       if (turn.currentPlayer.isHuman) {
         // show picker
@@ -95,6 +95,9 @@ class CrazyEightGameProvider extends GameProvider {
       }
 
       gameState[GS_LAST_SUIT] = suit;
+      setTrump(suit);
+      showToast(
+          "${turn.currentPlayer.name} has changede it to ${CardModel.suitToString(suit)}");
     } else if (card.value == "2") {
       await drawCards(turn.otherPlayer, count: 2, allowanytime: true);
       showToast("${turn.currentPlayer.name} has to draw 2 cards!");
