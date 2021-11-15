@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_card_game/models/player_model.dart';
 import 'package:flutter_card_game/models/turn_model.dart';
 
 class PlayerInfo extends StatelessWidget {
