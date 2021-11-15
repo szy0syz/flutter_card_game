@@ -10,7 +10,7 @@ class CrazyEightGameProvider extends GameProvider {
   @override
   Future<void> setupBoard() async {
     for (var p in players) {
-      await drawCards(p, count: 8, allowanytime: true);
+      await drawCards(p, count: 3, allowanytime: true);
     }
 
     await drawCardToDiscardPile();
@@ -51,6 +51,21 @@ class CrazyEightGameProvider extends GameProvider {
     }
 
     return canPlay;
+  }
+
+  @override
+  void finishGame() {
+    showToast("Game over! ${turn.currentPlayer.name} WINS!");
+    notifyListeners();
+  }
+
+  @override
+   bool get gameIsOver {
+     if (turn.currentPlayer.cards.isEmpty) {
+       return true;
+     }
+
+    return false;
   }
 
   @override

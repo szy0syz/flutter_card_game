@@ -82,12 +82,14 @@ abstract class GameProvider with ChangeNotifier {
   }
 
   bool get canDrawCard {
+    print('turn.drawCount ${turn.drawCount}');
     return turn.drawCount < 1;
   }
 
   Future<void> drawCards(PlayerModel player,
       {int count = 1, bool allowanytime = false}) async {
     if (currentDeck == null) return;
+    print('@');
     if (!allowanytime && !canDrawCard) return;
 
     final draw = await _service.drawCards(_currentDeck!, count: count);
@@ -121,7 +123,18 @@ abstract class GameProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  bool get gameIsOver {
+    return currentDeck!.remaining < 1;
+  }
+
+  void finishGame() {
+    showToast("Game over");
+    notifyListeners();
+  }
+
   bool canPlayCard(CardModel card) {
+    if (gameIsOver) return false;
+    
     return _turn.actionCount < 1;
   }
 
@@ -140,6 +153,10 @@ abstract class GameProvider with ChangeNotifier {
     setLastPlayed(card);
 
     await applyCardSideEffect(card);
+
+    if (gameIsOver) {
+      finishGame();
+    }
 
     notifyListeners();
   }
